@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -21,13 +20,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
-
+import android.os.Parcelable
+import androidx.compose.material3.Button
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.parcelize.Parcelize
 import models.charClass.CharacterClass
 import models.charClass.CharacterClasses
+import models.character.race.Alignment
 import models.character.race.Race
 import models.character.race.Races
 
@@ -43,8 +45,43 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Parcelize
+data class ParHability(
+    val habilityName: String,
+    val description: String,
+    val modType: String,
+    val modStat: String,
+    val modAmmount: Byte
+): Parcelable
+
+@Parcelize
+class ParRace(
+    val raceName: String,
+    val infravision: Byte?,
+    val movement: Byte,
+    val preferredAlignment: Alignment,
+    val racialHability: List<ParHability> = listOf<ParHability>()
+) : Parcelable
+
+@Parcelize
+class ParCharacterClass(
+    val className: String,
+    val hitDie: Int,
+    val primaryAttribute: String,
+    val allowedArmor: List<String>,
+    val allowedWeapons: List<String>
+) : Parcelable
+
+@Parcelize
+class CharacterHeader(
+    val name: String,
+    val race: ParRace,
+    val charClass: ParCharacterClass
+) : Parcelable
+
 @Composable
 fun CharacterCreation(){
+    val context = LocalContext.current
     Column(modifier = Modifier.padding(16.dp)){
 
         var nameInput by remember { mutableStateOf("") }
@@ -75,6 +112,54 @@ fun CharacterCreation(){
             },
             dropdownLabel = "Raça"
         )
+
+        Button(
+            onClick = {
+                if (raceInput != null && classInput != null) {
+                    val parRace = ParRace(
+                        raceName = raceInput!!.raceName,
+                        infravision = raceInput!!.infravision,
+                        movement = raceInput!!.movement,
+                        preferredAlignment = raceInput!!.preferredAlignment,
+                        racialHability = raceInput!!.racialHability.map {
+                            ParHability(
+                                habilityName = it.habilityName,
+                                description = it.description,
+                                modType = it.modType,
+                                modStat = it.modStat,
+                                modAmmount = it.modAmmount
+                            )
+                        }
+                    )
+
+                    val parClass = ParCharacterClass(
+                        className = classInput!!.className,
+                        hitDie = classInput!!.hitDie,
+                        primaryAttribute = classInput!!.primaryAttribute,
+                        allowedArmor = classInput!!.allowedArmor,
+                        allowedWeapons = classInput!!.allowedWeapons
+                    )
+
+                    if(nameInput==""){
+                        nameInput = "Character"
+                    }
+
+                    val header = CharacterHeader(
+                        name = nameInput,
+                        race = parRace,
+                        charClass = parClass
+                    )
+
+                    val intent = Intent(context, CharacterStats::class.java).apply {
+                        putExtra("character", header)
+                    }
+                    context.startActivity(intent)
+                }
+            },
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Text("Next")
+        }
 
 
     }

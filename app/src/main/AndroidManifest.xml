@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".CharacterStatsSelection"
+            android:name=".CharacterStats"
             android:exported="false"
-            android:label="Stats Selection"
-            android:theme="@style/Theme.MyApplication"/>
+            android:label="@string/title_activity_character_stats"
+            android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
