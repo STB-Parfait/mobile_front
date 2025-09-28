@@ -1,7 +1,7 @@
 package models.charClass
 
 class Cleric : CharacterClass(
-    className = "Clérigo",
+    className = "Cleric",
     hitDie = 8,
     primaryAttribute = "wis",
     allowedArmor = listOf("leather", "chainmail", "shield"),

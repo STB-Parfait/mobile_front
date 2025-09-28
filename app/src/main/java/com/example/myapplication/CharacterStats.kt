@@ -1,6 +1,8 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -27,25 +29,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.parcelize.Parcelize
 
 
 class CharacterStats : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val character = intent.getParcelableExtra<CharacterHeader>("character")
+        val characterHeader = intent.getParcelableExtra<CharacterHeader>("character")
 
         setContent {
             MyApplicationTheme {
-                MainMenu()
+                MainMenu(characterHeader)
             }
         }
     }
 }
+@Parcelize
+class CreationInfo(
+    val type:Int,
+    val atributeSheet: Map<String, Int>
+) : Parcelable
+
 @Composable
-fun MainMenu(){
+fun MainMenu(header: CharacterHeader?){
+    val context = LocalContext.current
     var characterCreationType by remember { mutableStateOf(0) }
     var customAttributes by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
     var pointsLeft by remember { mutableStateOf(27) }
@@ -70,7 +81,7 @@ fun MainMenu(){
                 )
                 Spacer(Modifier.width(8.dp))
                 CustomButton(
-                    text = "Custom",
+                    text = "Adventurer",
                     isSelected = characterCreationType == 3,
                     onClick = {characterCreationType = 3}
                 )
@@ -87,11 +98,12 @@ fun MainMenu(){
         }
         Button(
             onClick = {
-                when (characterCreationType) {
-                    1 -> println("Confirmou Classic")
-                    2 -> println("Confirmou Heroic")
-                    3 -> println("Confirmou Custom: $customAttributes")
+                val creation = CreationInfo(characterCreationType, customAttributes)
+                val intent = Intent(context, CharacterList::class.java).apply {
+                    putExtra("header", header)
+                    putExtra("creation", creation)
                 }
+                context.startActivity(intent)
             },
             enabled = characterCreationType != 0 && (characterCreationType != 3 || pointsLeft == 0), // só bloqueia se Custom não terminou
             modifier = Modifier

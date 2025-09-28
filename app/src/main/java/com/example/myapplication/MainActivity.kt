@@ -110,7 +110,7 @@ fun CharacterCreation(){
             onRaceSelected = { selectedRace ->
                 raceInput = selectedRace
             },
-            dropdownLabel = "Raça"
+            dropdownLabel = "Race"
         )
 
         Button(
@@ -170,7 +170,7 @@ fun CharacterRaceDropdown(
     modifier: Modifier = Modifier,
     selectedRace: Race?,
     onRaceSelected: (Race) -> Unit,
-    dropdownLabel: String = "Raça"
+    dropdownLabel: String = "Race"
 ){
     var expanded by remember { mutableStateOf(false) }
     var availableRaces = remember { Races.listAll() }
@@ -183,7 +183,7 @@ fun CharacterRaceDropdown(
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth(),
-                value = selectedRace?.raceName ?: "Selecione uma raça",
+                value = selectedRace?.raceName ?: "Select a race",
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(dropdownLabel) },
@@ -215,7 +215,7 @@ fun CharacterClassDropdown(
     modifier: Modifier = Modifier,
     selectedClass: CharacterClass?,
     onClassSelected: (CharacterClass) -> Unit,
-    dropdownLabel: String = "Classe"
+    dropdownLabel: String = "Class"
     ){
     var expanded by remember { mutableStateOf(false) }
     val availableClasses = remember { CharacterClasses.listAll() }
@@ -228,7 +228,7 @@ fun CharacterClassDropdown(
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth(),
-                value = selectedClass?.className ?: "Selecione uma classe",
+                value = selectedClass?.className ?: "Select a class",
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(dropdownLabel) },

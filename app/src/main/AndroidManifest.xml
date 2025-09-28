@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".CharacterList"
+            android:exported="false"
+            android:label="@string/title_activity_character_list"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
             android:name=".CharacterStats"
             android:exported="false"
             android:label="@string/title_activity_character_stats"

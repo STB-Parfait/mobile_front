@@ -4,7 +4,7 @@ import models.character.hability.Habilities
 
 object Races {
     val human = Race(
-        raceName = "Humano",
+        raceName = "Human",
         infravision = null,
         movement = 9,
         preferredAlignment = Alignment.TRUE_NEUTRAL,
@@ -14,7 +14,7 @@ object Races {
         )
     )
     val elf = Race(
-        raceName = "Elfo",
+        raceName = "Elf",
         infravision = 18,
         movement = 9,
         preferredAlignment = Alignment.CHAOTIC_GOOD,
@@ -24,7 +24,7 @@ object Races {
         )
     )
     val dwarf = Race(
-        raceName = "Anão",
+        raceName = "Dwarf",
         infravision = 18,
         movement = 6,
         preferredAlignment = Alignment.LAWFUL_GOOD,

@@ -1,7 +1,7 @@
 package models.charClass
 
 class Fighter : CharacterClass(
-    className = "Guerreiro",
+    className = "Fighter",
     hitDie = 10,
     primaryAttribute = "str",
     allowedArmor = listOf("leather", "chainmail", "platemail", "shield"),

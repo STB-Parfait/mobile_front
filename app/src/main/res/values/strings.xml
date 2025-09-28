@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="title_activity_character_stats">CharacterStats</string>
+    <string name="title_activity_character_list">CharacterList</string>
 </resources>

@@ -1,7 +1,7 @@
 package models.charClass
 
 class Wizard : CharacterClass(
-    className = "Mago",
+    className = "Wizard",
     hitDie = 4,
     primaryAttribute = "int",
     allowedArmor = listOf("robes"),
