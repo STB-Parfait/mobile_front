@@ -16,6 +16,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
+import com.example.myapplication.data.AppDatabase
+import com.example.myapplication.data.CharacterEntity
+import kotlinx.coroutines.launch
 import models.charClass.CharacterClasses
 import models.character.AttributeDistribution
 import models.character.AttributeDistributionType
@@ -48,6 +53,29 @@ class CharacterList : ComponentActivity() {
         character.name = characterHeader!!.name
         character.race = Races.findByName(characterHeader.race.raceName)
         character.characterClass = CharacterClasses.findByName(characterHeader.charClass.className)
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "characters_db"
+        ).build()
+
+        val dao = db.characterDao()
+
+        lifecycleScope.launch {
+            val entity = CharacterEntity(
+                name = character.name,
+                race = character.race?.raceName ?: "Desconhecida",
+                charClass = character.characterClass?.className ?: "Desconhecida",
+                strength = character.skills.get("str")!!.toInt(),
+                dexterity = character.skills.get("dex")!!.toInt(),
+                constitution = character.skills.get("con")!!.toInt(),
+                intelligence = character.skills.get("int")!!.toInt(),
+                wisdom = character.skills.get("wis")!!.toInt(),
+                charisma = character.skills.get("cha")!!.toInt()
+            )
+            dao.insert(entity)
+        }
 
         enableEdgeToEdge()
         setContent {

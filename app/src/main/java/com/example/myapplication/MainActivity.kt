@@ -215,7 +215,7 @@ fun CharacterClassDropdown(
     modifier: Modifier = Modifier,
     selectedClass: CharacterClass?,
     onClassSelected: (CharacterClass) -> Unit,
-    dropdownLabel: String = "Class"
+    dropdownLabel: String = "Classe"
     ){
     var expanded by remember { mutableStateOf(false) }
     val availableClasses = remember { CharacterClasses.listAll() }
