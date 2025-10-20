@@ -28,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.myapplication.data.AppDatabase
 import com.example.myapplication.data.CharacterEntity
+import com.example.myapplication.data.DatabaseProvider
 import kotlinx.coroutines.launch
 import models.charClass.CharacterClasses
 import models.character.AttributeDistribution
@@ -62,13 +63,9 @@ class CharacterList : ComponentActivity() {
         character.race = Races.findByName(characterHeader.race.raceName)
         character.characterClass = CharacterClasses.findByName(characterHeader.charClass.className)
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "characters_db"
-        ).build()
-
+        val db = DatabaseProvider.getDatabase(this)
         val dao = db.characterDao()
+
 
         lifecycleScope.launch {
             val entity = CharacterEntity(
