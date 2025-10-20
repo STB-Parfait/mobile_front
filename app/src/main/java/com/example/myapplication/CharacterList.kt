@@ -8,12 +8,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
@@ -79,30 +87,50 @@ class CharacterList : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            CharacterCard(character)
+            CharacterListScreen(db)
         }
     }
 }
 @Composable
-fun CharacterCard(character: Character, modifier: Modifier = Modifier) {
+fun CharacterListScreen(db: AppDatabase) {
+    val dao = db.characterDao()
+    val coroutineScope = rememberCoroutineScope()
+    var characters by remember { mutableStateOf<List<CharacterEntity>>(emptyList()) }
+
+    // Carrega os personagens ao abrir a tela
+    LaunchedEffect(Unit) {
+        characters = dao.getAll()
+    }
+
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(characters) { character ->
+            CharacterEntityCard(character)
+        }
+    }
+}
+@Composable
+fun CharacterEntityCard(character: CharacterEntity, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Name: ${character.name}", style = MaterialTheme.typography.titleLarge)
-            Text("Class: ${character.characterClass?.className ?: "Desconhecida"}")
-            Text("Race: ${character.race?.raceName ?: "Desconhecida"}")
+            Text("Nome: ${character.name}", style = MaterialTheme.typography.titleLarge)
+            Text("Classe: ${character.charClass}")
+            Text("Raça: ${character.race}")
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            Text("Skills:", style = MaterialTheme.typography.titleMedium)
-            character.skills.forEach { (attr, value) ->
-                Text("$attr: $value")
-            }
+            Text("Atributos:", style = MaterialTheme.typography.titleMedium)
+            Text("STR: ${character.strength}")
+            Text("DEX: ${character.dexterity}")
+            Text("CON: ${character.constitution}")
+            Text("INT: ${character.intelligence}")
+            Text("WIS: ${character.wisdom}")
+            Text("CHA: ${character.charisma}")
         }
     }
 }
